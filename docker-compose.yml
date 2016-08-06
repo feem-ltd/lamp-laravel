@@ -1,0 +1,22 @@
+mysql_service:
+    image: mysql:5.7
+    environment:
+        MYSQL_ROOT_PASSWORD: pass
+        MYSQL_DATABASE: testdb
+        MYSQL_USER: test
+        MYSQL_PASSWORD: testtest
+    volumes:
+        #- ./my.cnf:/etc/mysql/conf.d/my.cnf
+        - /var/lib/mysql
+    container_name: mysql_container
+
+php_service:
+    build: php
+    ports:
+        - "80:80"
+    volumes:
+        - ./laravel:/var/www/html
+        - ./apache2.conf:/etc/apache2/apache2.conf
+    links:
+        - mysql_service:mysql
+    container_name: php_container
