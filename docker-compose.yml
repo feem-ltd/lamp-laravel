@@ -16,7 +16,8 @@ php_service:
         - "80:80"
     volumes:
         - ./laravel:/var/www/html
-        - ./apache2.conf:/etc/apache2/apache2.conf
+        #- ./apache2.conf:/etc/apache2/apache2.conf
+        - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
     links:
         - mysql_service:mysql
     container_name: laravel_php_container
