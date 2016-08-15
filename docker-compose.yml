@@ -8,7 +8,7 @@ mysql_service:
     volumes:
         #- ./my.cnf:/etc/mysql/conf.d/my.cnf
         - /var/lib/mysql
-    container_name: laravel_mysql_container
+    #container_name: laravel_mysql_container
 
 php_service:
     build: php
@@ -20,4 +20,4 @@ php_service:
         - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
     links:
         - mysql_service:mysql
-    container_name: laravel_php_container
+    #container_name: laravel_php_container
