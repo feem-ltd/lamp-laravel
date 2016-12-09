@@ -8,16 +8,14 @@ mysql_service:
     volumes:
         #- ./my.cnf:/etc/mysql/conf.d/my.cnf
         - /var/lib/mysql
-    #container_name: laravel_mysql_container
 
 php_service:
     build: php
     ports:
-        - "80:80"
+        - "8010:80"
     volumes:
         - ./laravel:/var/www/html
         #- ./apache2.conf:/etc/apache2/apache2.conf
         - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
     links:
         - mysql_service:mysql
-    #container_name: laravel_php_container
