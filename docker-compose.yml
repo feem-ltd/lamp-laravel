@@ -1,4 +1,4 @@
-mysql_sv:
+mysql_serv:
     image: mysql:5.7
     environment:
         MYSQL_ROOT_PASSWORD: pass
@@ -9,7 +9,7 @@ mysql_sv:
         - ./my.cnf:/etc/mysql/conf.d/my.cnf
         - /var/lib/mysql
 
-php_sv:
+php_serv:
     build: php
     ports:
         - "8010:80"
@@ -18,5 +18,4 @@ php_sv:
         - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         - ./php.ini:/usr/local/etc/php/php.ini
     links:
-        - mysql_sv:mysql
-    #container_name: laravel_php_container
+        - mysql_serv:mysql
