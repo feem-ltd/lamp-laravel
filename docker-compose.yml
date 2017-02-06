@@ -1,4 +1,4 @@
-mysql_service:
+mysql_serv:
     image: mysql:5.7
     environment:
         MYSQL_ROOT_PASSWORD: pass
@@ -6,15 +6,16 @@ mysql_service:
         MYSQL_USER: test
         MYSQL_PASSWORD: testtest
     volumes:
+        - ./my.cnf:/etc/mysql/conf.d/my.cnf
         - /var/lib/mysql
 
-php_service:
+php_serv:
     build: php
     ports:
-        - "8600:80"
+        - "8010:80"
     volumes:
         - ./laravel:/var/www/html
         - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         - ./php.ini:/usr/local/etc/php/php.ini
     links:
-        - mysql_service:mysql
+        - mysql_serv:mysql
