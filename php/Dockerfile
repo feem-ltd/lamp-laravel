@@ -7,6 +7,6 @@ RUN apt-get update \
   && pecl install xdebug \
   && curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer
-# Mac Œü‚¯ hddpd ‚ÌŒ ŒÀ‚Æ‘‚«‚İƒfƒBƒŒƒNƒgƒŠ‚ÌŒ ŒÀ‚Å–â‘è‚É‚È‚éê‡‚Ì‘Î‰
+# Mac å‘ã‘ hddpd ã®æ¨©é™ã¨æ›¸ãè¾¼ã¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®æ¨©é™ã§å•é¡Œã«ãªã‚‹å ´åˆã®å¯¾å¿œ
 RUN usermod -u 1000 www-data \
   && groupmod -g 1000 www-data
