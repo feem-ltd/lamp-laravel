@@ -12,10 +12,15 @@ mysql_serv:
 php_serv:
     build: php
     ports:
-        - "8010:80"
+        - "8083:80"
+        - "9000:9000"
+        - "8877:8877"
     volumes:
         - ./laravel:/var/www/html
         - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         - ./php.ini:/usr/local/etc/php/php.ini
     links:
         - mysql_serv:mysql
+    environment:
+        TZ: Asia/Tokyo
+    #    XDEBUG_CONFIG: remote_host=192.168.11.101
