@@ -12,7 +12,7 @@ mysql_serv:
 php_serv:
     build: php
     ports:
-        - "8083:80"
+        - "8888:80"
         - "9000:9000"
         - "8877:8877"
     volumes:
