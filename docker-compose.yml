@@ -9,6 +9,20 @@ mysql_serv:
         - ./my.cnf:/etc/mysql/conf.d/my.cnf
         - /var/lib/mysql
 
+phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  environment:
+    - PMA_ARBITRARY=1
+    - PMA_HOST=mysql
+    - PMA_USER=root
+    - PMA_PASSWORD=password
+  links:
+    - mysql_serv
+  ports:
+     - 8093:80
+  volumes:
+     - /sessions
+
 php_serv:
     build: php
     ports:
@@ -19,6 +33,8 @@ php_serv:
         - ./laravel:/var/www/html
         - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         - ./php.ini:/usr/local/etc/php/php.ini
+        - ./laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
+        #- ./config.inc.php:/etc/phpmyadmin/config.inc.php
     links:
         - mysql_serv:mysql
     environment:
