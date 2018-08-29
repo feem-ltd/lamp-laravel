@@ -1,42 +1,31 @@
-mysql_serv:
+version: '2.1'
+services:
+  mysql_serv:
     image: mysql:5.7
     environment:
-        MYSQL_ROOT_PASSWORD: pass
-        MYSQL_DATABASE: testdb
-        MYSQL_USER: test
-        MYSQL_PASSWORD: testtest
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: test
+      MYSQL_PASSWORD: testtest
     volumes:
-        - ./my.cnf:/etc/mysql/conf.d/my.cnf
-        - /var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+      - /var/lib/mysql
 
-phpmyadmin:
-  image: phpmyadmin/phpmyadmin
-  environment:
-    - PMA_ARBITRARY=1
-    - PMA_HOST=mysql
-    - PMA_USER=root
-    - PMA_PASSWORD=password
-  links:
-    - mysql_serv
-  ports:
-     - 8093:80
-  volumes:
-     - /sessions
-
-php_serv:
+  php_serv:
     build: php
     ports:
-        - "8888:80"
-        - "9000:9000"
-        - "8877:8877"
+      - "8888:80"
+      #- "9000:9000"
+      #- "8877:8877"
     volumes:
-        - ./laravel:/var/www/html
-        - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
-        - ./php.ini:/usr/local/etc/php/php.ini
-        - ./laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
-        #- ./config.inc.php:/etc/phpmyadmin/config.inc.php
+      - ./laravel:/var/www/html
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./php.ini:/usr/local/etc/php/php.ini
+      - ./laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
+      - ./etc/logrotate.d/laravel:/etc/logrotate.d/laravel
+      #- ./config.inc.php:/etc/phpmyadmin/config.inc.php
     links:
-        - mysql_serv:mysql
+      - mysql_serv:mysql
     environment:
-        TZ: Asia/Tokyo
+      TZ: Asia/Tokyo
     #    XDEBUG_CONFIG: remote_host=192.168.11.101
