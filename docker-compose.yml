@@ -2,6 +2,7 @@ version: '2.1'
 services:
   mysql_serv:
     image: mysql:5.7
+    command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
     environment:
       MYSQL_ROOT_PASSWORD: pass
       MYSQL_DATABASE: testdb
@@ -9,7 +10,7 @@ services:
       MYSQL_PASSWORD: testtest
     volumes:
       - ./my.cnf:/etc/mysql/conf.d/my.cnf
-      - /var/lib/mysql
+      - ./mysql:/var/lib/mysql
 
   php_serv:
     build: php
