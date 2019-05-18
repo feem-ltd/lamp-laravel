@@ -2,6 +2,8 @@ FROM php:7.2-apache
 
 ENV DEBCONF_NOWARNINGS yes
 
+ADD init_laravel.sh /root
+
 RUN apt-get update \
   && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev libssh2-1-dev less git unzip telnet wget vim cron supervisor logrotate insserv \
   && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv \

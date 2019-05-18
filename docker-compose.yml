@@ -1,32 +1,31 @@
 version: '2.1'
 services:
-  mysql_serv:
+  mysql:
     image: mysql:5.7
     command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
     environment:
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_DATABASE: testdb
-      MYSQL_USER: test
-      MYSQL_PASSWORD: testtest
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=testdb
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=testtest
     volumes:
       - ./my.cnf:/etc/mysql/conf.d/my.cnf
       - ./mysql:/var/lib/mysql
 
-  php_serv:
-    build: php
+  laravel:
+    build: build/php
     ports:
       - "${WP_PORT}:80"
       #- "9000:9000"
       #- "8877:8877"
     volumes:
-      - ./laravel:/var/www/html
       - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./php.ini:/usr/local/etc/php/php.ini
       - ./laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
+      - ./laravel:/var/www/html
       - ./etc/logrotate.d/laravel:/etc/logrotate.d/laravel
-      #- ./config.inc.php:/etc/phpmyadmin/config.inc.php
-    links:
-      - mysql_serv:mysql
     environment:
-      TZ: Asia/Tokyo
-    #    XDEBUG_CONFIG: remote_host=192.168.11.101
+      - TZ=Asia/Tokyo
+      #- XDEBUG_CONFIG="remote_host=192.168.11.101"
+    links:
+      - mysql:mysql
