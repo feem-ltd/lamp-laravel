@@ -4,6 +4,9 @@ ENV DEBCONF_NOWARNINGS yes
 
 ADD init_laravel.sh /root
 
+# シェルスクリプトが LF でないと実行されないので、念のため LF に変換をおこなう。
+RUN sed -i 's/\r//' /root/init_laravel.sh
+
 RUN apt-get update \
   && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev libssh2-1-dev less git unzip telnet wget vim cron supervisor logrotate insserv \
   && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv \
