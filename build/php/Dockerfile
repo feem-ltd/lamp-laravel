@@ -18,11 +18,11 @@ RUN apt-get update \
   && mv composer.phar /usr/local/bin/composer \
   && touch /var/log/xdebug.log \
   && chown www-data:www-data /var/log/xdebug.log \
-  && curl -sL https://deb.nodesource.com/setup_10.x | bash -
+  && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
 　# npm install の node-sass のインストールで失敗するので、node.js をインストールするのは、一旦保留。
-  #&& apt-get install -y nodejs \
-  #&& npm install -g n \
-  #&& n lts
+  && apt-get install -y nodejs \
+  && npm install -g n \
+  && n lts
 
 # Mac 向け hddpd の権限と書き込みディレクトリの権限で問題になる場合の対応
 RUN usermod -u 1000 www-data \
