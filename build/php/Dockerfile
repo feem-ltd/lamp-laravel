@@ -31,6 +31,6 @@ RUN usermod -u 1000 www-data \
 RUN sed -ie '$ a * * * * * www-data for i in `seq 0 10 59`;do (sleep ${i}; php /var/www/html/artisan schedule:run >> /dev/null 2>&1) & done;' /etc/crontab
 
 #CMD chown -R www-data:www-data /var/www/html
-RUN update-rc.d supervisor defaults
-RUN service supervisor start
-RUN insserv -d supervisor
+#RUN update-rc.d supervisor defaults
+#RUN service supervisor start
+#RUN insserv -d supervisor
