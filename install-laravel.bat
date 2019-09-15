@@ -6,27 +6,35 @@ IF EXIST %filename% (
     GOTO BAT_END
 )
 
-ECHO docker-compose build
-docker-compose build
-
+SET CMD_STR=docker-compose build
+ECHO [32m%CMD_STR%[0m
+%CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
     ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
     GOTO BAT_END
 )
 
-ECHO docker-compose up -d
-docker-compose up -d
+IF NOT EXIST laravel (
+MD laravel
+)
 
+IF NOT EXIST etc\logrotate.d\laravel (
+MD etc\logrotate.d\laravel
+)
+
+SET CMD_STR=docker-compose up -d
+ECHO [32m%CMD_STR%[0m
+%CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
     ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
     GOTO BAT_END
 )
 
-ECHO docker-compose exec laravel composer create-project laravel/laravel ./ 5.5.* --prefer-dist
-docker-compose exec laravel composer create-project laravel/laravel ./ 5.5.* --prefer-dist
-
+SET CMD_STR=docker-compose exec laravel composer create-project laravel/laravel ./ 6.0.* --prefer-dist
+ECHO [32m%CMD_STR%[0m
+%CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
-    ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
+    ECHO [31mƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B[0m
     GOTO BAT_END
 )
 
@@ -38,35 +46,37 @@ REM     ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
 REM     GOTO BAT_END
 REM )
 
-ECHO docker-compose exec laravel /root/init_laravel.sh
-docker-compose exec laravel /root/init_laravel.sh
-
+SET CMD_STR=docker-compose exec laravel /root/init_laravel.sh
+ECHO [32m%CMD_STR%[0m
+%CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
-    ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
+    ECHO [31mƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B[0m
     GOTO BAT_END
 )
 
-ECHO COPY /Y .env laravel\.env
-COPY /Y .env laravel\.env
+REM START init-laravel-env.bat
 
+SET CMD_STR=docker-compose exec laravel composer require laravel/ui
+ECHO [32m%CMD_STR%[0m
+%CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
-    ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
+    ECHO [31mƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B[0m
     GOTO BAT_END
 )
 
-ECHO docker-compose exec laravel php artisan make:auth
-docker-compose exec laravel php artisan make:auth
-
+SET CMD_STR=docker-compose exec laravel php artisan ui vue --auth
+ECHO [32m%CMD_STR%[0m
+%CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
-    ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
+    ECHO [31mƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B[0m
     GOTO BAT_END
 )
 
-ECHO docker-compose exec laravel php artisan migrate
-docker-compose exec laravel php artisan migrate
-
+SET CMD_STR=docker-compose exec laravel php artisan migrate
+ECHO [32m%CMD_STR%[0m
+%CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
-    ECHO ƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B
+    ECHO [31mƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B[0m
     GOTO BAT_END
 )
 
