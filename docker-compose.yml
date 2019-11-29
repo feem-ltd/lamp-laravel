@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:5.7.28
     command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
@@ -10,7 +10,7 @@ services:
       - MYSQL_USER=user
       - MYSQL_PASSWORD=user_password
     volumes:
-      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mounts/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./mysql:/var/lib/mysql
 
   laravel:
@@ -20,11 +20,9 @@ services:
       #- "9000:9000"
       #- "8877:8877"
     volumes:
-      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
-      - ./php.ini:/usr/local/etc/php/php.ini
-      - ./laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
+      - ./mounts/laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
+      - ./mounts/etc/logrotate.d/laravel:/etc/logrotate.d/laravel
       - ./laravel:/var/www/html
-      - ./etc/logrotate.d/laravel:/etc/logrotate.d/laravel
     environment:
       - TZ=Asia/Tokyo
       #- XDEBUG_CONFIG="remote_host=192.168.11.101"

@@ -7,19 +7,45 @@ ADD init_laravel.sh /root
 # シェルスクリプトが LF でないと実行されないので、念のため LF に変換をおこなう。
 RUN sed -i 's/\r//' /root/init_laravel.sh
 
+# COPY ./php.ini /usr/local/etc/php/
+# COPY ./conf.d/*.conf /etc/apache2/sites-enabled/
+
+###########################################################
+# Apache の設定
+###########################################################
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+
+###########################################################
+# PHP の設定
+###########################################################
+# RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+COPY ./my-php.ini /usr/local/etc/php/conf.d/my-php.ini
+
+
+###########################################################
+# モジュールのインストール
+###########################################################
+# docker-php-ext-install で zip をインストールするためには、zlib1g-dev が必要。
 RUN apt-get update \
-  && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev libssh2-1-dev less git unzip telnet wget vim cron supervisor logrotate insserv \
-  && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv \
+  && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev libssh2-1-dev zlib1g-dev less git unzip telnet wget vim cron supervisor logrotate insserv \
+  && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv zip \
   && a2enmod rewrite \
   && pecl install mcrypt-1.0.1 \
   && pecl install xdebug \
-  && pecl install ssh2-alpha \
+  # 下記のように指定すると、2019/11/07 現在、pecl のサイトで 500 エラーになるので、バージョンを指定するようにした。
+  #&& pecl install ssh2-alpha \
+  && pecl install channel://pecl.php.net/ssh2-1.1.2 \
   && curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
   && touch /var/log/xdebug.log \
   && chown www-data:www-data /var/log/xdebug.log \
   && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
-　# npm install の node-sass のインストールで失敗するので、node.js をインストールするのは、一旦保留。
   && apt-get install -y nodejs \
   && npm install -g n \
   && n lts

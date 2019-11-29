@@ -18,9 +18,9 @@ IF NOT EXIST laravel (
 MD laravel
 )
 
-IF NOT EXIST etc\logrotate.d\laravel (
-MD etc\logrotate.d\laravel
-)
+REM IF NOT EXIST etc\logrotate.d\laravel (
+REM MD etc\logrotate.d\laravel
+REM )
 
 SET CMD_STR=docker-compose up -d
 ECHO [32m%CMD_STR%[0m
@@ -30,7 +30,7 @@ IF not "%ERRORLEVEL%"  == "0" (
     GOTO BAT_END
 )
 
-SET CMD_STR=docker-compose exec laravel composer create-project laravel/laravel ./ 6.0.* --prefer-dist
+SET CMD_STR=docker-compose exec laravel composer create-project laravel/laravel ./ 6.* --prefer-dist
 ECHO [32m%CMD_STR%[0m
 %CMD_STR%
 IF not "%ERRORLEVEL%"  == "0" (
@@ -55,29 +55,5 @@ IF not "%ERRORLEVEL%"  == "0" (
 )
 
 REM START init-laravel-env.bat
-
-SET CMD_STR=docker-compose exec laravel composer require laravel/ui
-ECHO [32m%CMD_STR%[0m
-%CMD_STR%
-IF not "%ERRORLEVEL%"  == "0" (
-    ECHO [31mÉGÉâÅ[Ç™î≠ê∂ÇµÇΩÇÃÇ≈èàóùÇèIóπÇµÇ‹Ç∑ÅB[0m
-    GOTO BAT_END
-)
-
-SET CMD_STR=docker-compose exec laravel php artisan ui vue --auth
-ECHO [32m%CMD_STR%[0m
-%CMD_STR%
-IF not "%ERRORLEVEL%"  == "0" (
-    ECHO [31mÉGÉâÅ[Ç™î≠ê∂ÇµÇΩÇÃÇ≈èàóùÇèIóπÇµÇ‹Ç∑ÅB[0m
-    GOTO BAT_END
-)
-
-SET CMD_STR=docker-compose exec laravel php artisan migrate
-ECHO [32m%CMD_STR%[0m
-%CMD_STR%
-IF not "%ERRORLEVEL%"  == "0" (
-    ECHO [31mÉGÉâÅ[Ç™î≠ê∂ÇµÇΩÇÃÇ≈èàóùÇèIóπÇµÇ‹Ç∑ÅB[0m
-    GOTO BAT_END
-)
 
 :BAT_END
