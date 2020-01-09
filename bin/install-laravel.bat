@@ -15,7 +15,7 @@ IF not "%ERRORLEVEL%"  == "0" (
 )
 
 IF NOT EXIST laravel (
-MD laravel
+    MD laravel
 )
 
 REM IF NOT EXIST etc\logrotate.d\laravel (
@@ -53,7 +53,5 @@ IF not "%ERRORLEVEL%"  == "0" (
     ECHO [31mƒGƒ‰[‚ª”­¶‚µ‚½‚Ì‚Åˆ—‚ğI—¹‚µ‚Ü‚·B[0m
     GOTO BAT_END
 )
-
-REM START init-laravel-env.bat
 
 :BAT_END
