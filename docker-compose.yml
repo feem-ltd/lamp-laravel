@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3'
 
 services:
   mysql:
@@ -11,7 +11,7 @@ services:
       - MYSQL_PASSWORD=user_password
     volumes:
       - ./mounts/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./mysql:/var/lib/mysql
+      - ./volumes/mysql:/var/lib/mysql
 
   laravel:
     build: build/php
@@ -22,9 +22,14 @@ services:
     volumes:
       - ./mounts/laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
       - ./mounts/etc/logrotate.d/laravel:/etc/logrotate.d/laravel
-      - ./laravel:/var/www/html
+      - ./volumes/laravel:/var/www/html
     environment:
       - TZ=Asia/Tokyo
+      - APP_URL=http://localhost:${DOCKER_MAP_PORT}
+      - DB_HOST=mysql
+      - DB_DATABASE=laravel
+      - DB_USERNAME=user
+      - DB_PASSWORD=user_password
       # - XDEBUG_CONFIG="remote_host=192.168.11.101"
     links:
-      - mysql:mysql
+      - mysql
