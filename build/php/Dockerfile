@@ -1,4 +1,4 @@
-FROM php:7.2-apache
+FROM php:7.4.23-apache
 
 ENV DEBCONF_NOWARNINGS yes
 
@@ -33,21 +33,32 @@ COPY ./my-php.ini /usr/local/etc/php/conf.d/my-php.ini
 ###########################################################
 # docker-php-ext-install で zip をインストールするためには、zlib1g-dev が必要。
 RUN apt-get update \
-  && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev libssh2-1-dev zlib1g-dev less git unzip telnet wget vim cron supervisor logrotate insserv \
-  && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv zip \
+  && apt-get install -y \
+  libfreetype6-dev \
+  libjpeg62-turbo-dev \
+  libpng-dev \
+  libmcrypt-dev \
+  libssh2-1-dev \
+  libonig-dev \
+  libzip-dev \
+  zlib1g-dev \
+  less git unzip telnet wget vim cron supervisor logrotate insserv gnupg \
+  && docker-php-ext-install pdo_mysql mysqli gd iconv zip \
   && a2enmod rewrite \
-  && pecl install mcrypt-1.0.1 \
+  # && pecl install mcrypt-1.0.1 \
   && pecl install xdebug \
   # 下記のように指定すると、2019/11/07 現在、pecl のサイトで 500 エラーになるので、バージョンを指定するようにした。
-  #&& pecl install ssh2-alpha \
-  && pecl install channel://pecl.php.net/ssh2-1.1.2 \
+  # && pecl install ssh2-alpha \
+  # && pecl install channel://pecl.php.net/ssh2-1.1.2 \
   && curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
   && touch /var/log/xdebug.log \
-  && chown www-data:www-data /var/log/xdebug.log \
-  && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
-  && apt-get install -y nodejs \
-  && npm install -g n \
+  && chown www-data:www-data /var/log/xdebug.log
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get update \
+  && apt-get upgrade -y \
+  && apt-get install -y nodejs
+RUN npm install -g n \
   && n lts
 
 # Mac 向け hddpd の権限と書き込みディレクトリの権限で問題になる場合の対応
