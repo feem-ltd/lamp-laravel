@@ -27,7 +27,7 @@ COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 # RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 # RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY build/laravel/my-php.ini /usr/local/etc/php/conf.d/my-php.ini
+COPY build/laravel/conf.d/my-php.ini /usr/local/etc/php/conf.d/my-php.ini
 
 
 ###########################################################
