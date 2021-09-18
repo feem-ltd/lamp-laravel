@@ -2,9 +2,10 @@ version: '3'
 
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: ./build/nginx/Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: ./build/nginx/Dockerfile
+    image: feem/lemp-nginx
     ports:
       - "${DOCKER_MAP_PORT}:80"
     volumes:
@@ -15,9 +16,10 @@ services:
       - laravel
 
   laravel:
-    build:
-      context: .
-      dockerfile: ./build/laravel/Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: ./build/laravel/Dockerfile
+    image: feem/lemp-node-laravel
     expose:
       - 9000
     volumes:
@@ -33,16 +35,17 @@ services:
       - DB_PASSWORD=user_password
       # - XDEBUG_CONFIG="remote_host=192.168.11.101"
     links:
-      - mysql
+      - mariadb
 
-  mysql:
-    image: mysql:5.7.28
-    command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
+  mariadb:
+    # image: mysql:5.7.28
+    image: feem/lemp-mysql
+    # command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_DATABASE=laravel
       - MYSQL_USER=user
       - MYSQL_PASSWORD=user_password
     volumes:
-      - ./mounts/my.cnf:/etc/mysql/conf.d/my.cnf
+      # - ./mounts/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./volumes/mysql:/var/lib/mysql
