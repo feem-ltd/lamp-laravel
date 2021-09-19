@@ -29,7 +29,7 @@ services:
     environment:
       - TZ=Asia/Tokyo
       - APP_URL=http://localhost:${DOCKER_MAP_PORT}
-      - DB_HOST=mysql
+      - DB_HOST=mariadb
       - DB_DATABASE=laravel
       - DB_USERNAME=user
       - DB_PASSWORD=user_password
@@ -39,7 +39,7 @@ services:
 
   mariadb:
     # image: mysql:5.7.28
-    image: feem/lemp-mysql
+    image: feem/lemp-mariadb
     # command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
