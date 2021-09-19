@@ -1,0 +1,8 @@
+FROM feem/lemp-node-laravel
+
+COPY volumes/laravel /var/www/html
+RUN composer install && \
+  cp .env.example .env && \
+  php artisan key:generate && \
+  chmod -R 777 storage && \
+  yarn install  
