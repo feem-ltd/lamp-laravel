@@ -14,7 +14,7 @@ services:
       - ./volumes/mysql:/var/lib/mysql
 
   laravel:
-    build: build/php
+    build: build/laravel
     ports:
       - "${DOCKER_MAP_PORT}:80"
       # - "9000:9000"
