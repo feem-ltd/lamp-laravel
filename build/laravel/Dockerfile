@@ -28,7 +28,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY ./my-php.ini /usr/local/etc/php/conf.d/my-php.ini
+COPY build/laravel/conf.d/my-php.ini /usr/local/etc/php/conf.d/my-php.ini
 
 
 ###########################################################
