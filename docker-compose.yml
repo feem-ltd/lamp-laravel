@@ -2,7 +2,7 @@ version: '3'
 
 services:
   mysql:
-    image: mysql:5.7.28
+    image: feem/lamp-mysql
     command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
@@ -10,18 +10,17 @@ services:
       - MYSQL_USER=user
       - MYSQL_PASSWORD=user_password
     volumes:
-      - ./mounts/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./volumes/mysql:/var/lib/mysql
 
   laravel:
-    build: build/laravel
+    image: feem/lamp-node-laravel
     ports:
       - "${DOCKER_MAP_PORT}:80"
       # - "9000:9000"
       # - "8877:8877"
     volumes:
-      - ./mounts/laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
-      - ./mounts/etc/logrotate.d/laravel:/etc/logrotate.d/laravel
+      # - ./mounts/laravel_queue.conf:/etc/supervisor/conf.d/laravel_queue.conf
+      # - ./mounts/etc/logrotate.d/laravel:/etc/logrotate.d/laravel
       - ./volumes/laravel:/var/www/html
     environment:
       - TZ=Asia/Tokyo
