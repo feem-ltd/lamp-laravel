@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mysql:
+    image: feem/lamp-mysql
+    command: bash -c 'usermod -o -u 1000 mysql; groupmod -o -g 500 mysql; chown -R mysql:root /var/run/mysqld/; /entrypoint.sh mysqld --user=mysql --console'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=laravel
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user_password
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+
+  laravel:
+    image: ${LARAVEL_DOCKER_IMAGE}
+    ports:
+      - "${DOCKER_MAP_PORT}:80"
+    environment:
+      - TZ=Asia/Tokyo
+      - APP_URL=http://localhost:${DOCKER_MAP_PORT}
+      - DB_HOST=mysql
+      - DB_DATABASE=laravel
+      - DB_USERNAME=user
+      - DB_PASSWORD=user_password
+    links:
+      - mysql

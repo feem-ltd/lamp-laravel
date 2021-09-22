@@ -5,7 +5,7 @@ ENV DEBCONF_NOWARNINGS yes
 ARG TZ=Asia/Tokyo
 ARG NODE_VERSION=12.x
 
-ADD init_laravel.sh /root
+ADD build/laravel/init_laravel.sh /root
 
 # シェルスクリプトが LF でないと実行されないので、念のため LF に変換をおこなう。
 RUN sed -i 's/\r//' /root/init_laravel.sh
@@ -37,7 +37,7 @@ COPY build/laravel/conf.d/my-php.ini /usr/local/etc/php/conf.d/my-php.ini
 RUN set -xe; \
   apt-get update -yqq && \
   apt-get install -yqq --no-install-recommends \
-  apt-utils vim gettext git \
+  apt-utils gettext git less vim \
   default-mysql-client \
   # for gd
   libfreetype6-dev \
