@@ -1,4 +1,4 @@
-FROM php:7.4.23-apache
+FROM php:7.4.23-apache as development
 
 ENV DEBCONF_NOWARNINGS yes
 
@@ -25,10 +25,16 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 ###########################################################
 # PHP の設定
 ###########################################################
+# PHP_INI_DIR ⇒ /usr/local/etc/php 
 # RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY build/laravel/conf.d/my-php.ini /usr/local/etc/php/conf.d/my-php.ini
+# COPY build/laravel/conf.d/my-php.ini /usr/local/etc/php/conf.d/my-php.ini
+RUN sed -ri -e 's!.*memory_limit =.*!memory_limit = 2048M!g' $PHP_INI_DIR/php.ini
+RUN sed -ri -e 's!.*max_execution_time =.*!max_execution_time = 480!g' $PHP_INI_DIR/php.ini
+RUN sed -ri -e 's!.*date.timezone =.*!date.timezone = "Asia/Tokyo"!g' $PHP_INI_DIR/php.ini
+RUN sed -ri -e 's!.*mbstring.internal_encoding =.*!mbstring.internal_encoding = "UTF-8"!g' $PHP_INI_DIR/php.ini
+RUN sed -ri -e 's!.*mbstring.language =.*!mbstring.language = "Japanese"!g' $PHP_INI_DIR/php.ini
 
 
 ###########################################################
@@ -101,3 +107,19 @@ WORKDIR /var/www/html
 #RUN update-rc.d supervisor defaults
 #RUN service supervisor start
 #RUN insserv -d supervisor
+
+
+FROM development as production
+
+COPY volumes/laravel /var/www/html
+
+RUN cp .env.example .env
+
+RUN sed -ri -e 's!APP_ENV=.*!APP_ENV=production!g' /var/www/html/.env
+RUN sed -ri -e 's!APP_DEBUG=.*!APP_DEBUG=false!g' /var/www/html/.env
+
+RUN composer install && \
+  # php artisan key:generate && \
+  yarn install && \
+  chmod -R 777 storage && \
+  yarn run prod
