@@ -19,6 +19,7 @@ services:
     environment:
       - TZ=Asia/Tokyo
       - APP_URL=http://localhost:${DOCKER_MAP_PORT}
+      - APP_KEY=${APP_KEY}
       - DB_HOST=mysql
       - DB_DATABASE=laravel
       - DB_USERNAME=user
